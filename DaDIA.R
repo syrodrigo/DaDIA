@@ -16,8 +16,8 @@ library(ProtGenerics)
 print("Finished loading packages")
 ###############################################################
 #Part 1: Parameters for feature extraction
-DDA.directory <- "E:/DDA/"
-DIA.directory <- "E:/DIA/"
+DDA.directory <- "E:\\metabolomics_data\\DaDia\\DDA"
+DIA.directory <- "E:\\metabolomics_data\\DaDia\\DIA"
 cwpDDA <- CentWaveParam(ppm=10,
                         peakwidth=c(5,60),
                         mzdiff = 0.01,
@@ -35,7 +35,7 @@ cwpDIA <- CentWaveParam(ppm=10,
 mass.tol <- 10 #mz tolerance in ppm: used in feature dereplication and MS2 matching
 mass.const.tol <- 0.05 #mz tolerance in constant value: used in feature rescue
 rt.tol <- 60 #rt tolerance in seconds
-num.samples <- 1 #enter how many DIA samples here
+num.samples <- 11 #enter how many DIA samples here
 plot.DaDIA <- TRUE #plot DaDIA features
 plot.DaDIA.mztol <- 0.5 #DaDIA feature plotting mz window width
 plot.DaDIA.rttol <- 30 #DaDIA feature plotting rt window width
@@ -50,7 +50,8 @@ quantitative.method <- "maxo"
 ###############################################################
 #Part 2: Parameters for database search (dot product)
 feature.annotation <- TRUE #annotate DaDIA features
-db.name <- "Library.msp" #annotation library name
+db.name <- "Converted_Library.msp" #annotation library name
+polar = "negative" #polarity for adduct search "positive" or "negative"
 ms1.tol <- 0.01 #dot product calculation ms1 tolerance
 ms2.tol <- 0.02 #dot product calculation ms2 tolerance
 dot.product.threshold <- 0.1 #dot product annotation threshold
@@ -170,7 +171,7 @@ if(num.samples == 1){
       rt.upper.limit <- featureTable$rt[k] + plot.DaDIA.rttol
       mass.lower.limit <- featureTable$mz[k] - plot.DaDIA.mztol
       mass.upper.limit <- featureTable$mz[k] + plot.DaDIA.mztol
-      png(file = paste0(featureTable$mz[k],"_", featureTable$rt[k],".png"), width = 480, height = 480)
+      png(file = paste0(round(featureTable$mz[k], 5) ,"_", featureTable$rt[k],".png"), width = 480, height = 480)
       eic <- plotEIC(xrawSWATH, mzrange = c(mass.lower.limit, mass.upper.limit), 
                      rtrange = c(rt.lower.limit,rt.upper.limit))
       dev.off()
@@ -854,7 +855,7 @@ if(feature.annotation == TRUE){
       anF <- groupFWHM(xsa, perfwhm = 0.6)
       anI <- findIsotopes(anF, mzabs = 0.01)
       anIC <- groupCorr(anI, cor_eic_th = 0.75)
-      anFA <- findAdducts(anIC, polarity="positive")
+      anFA <- findAdducts(anIC, polarity=polar)
       peaklist <- getPeaklist(anFA)
       peaklist <- peaklist[order(peaklist$mz),]
       featureTable <- cbind(featureTable, peaklist$isotopes)
@@ -945,7 +946,7 @@ if(feature.annotation == TRUE){
       anF <- groupFWHM(xsa, perfwhm = 0.6)
       anI <- findIsotopes(anF, mzabs = 0.01)
       anIC <- groupCorr(anI, cor_eic_th = 0.75)
-      anFA <- findAdducts(anIC, polarity="positive")
+      anFA <- findAdducts(anIC, polarity=polar)
       peaklist <- getPeaklist(anFA)
       peaklist <- peaklist[order(peaklist$mz),]
       featureTable <- cbind(featureTable, peaklist$isotopes)
@@ -1054,7 +1055,7 @@ if(MS2mirrorplot){
                         substr(MS2_Spectra_Table$Annotation[g], 46, 90), "\n",
                         substr(MS2_Spectra_Table$Annotation[g], 91, nchar(MS2_Spectra_Table$Annotation[g])))
       }
-      png(file = paste0(MS2_Spectra_Table$ID[g],"_DP_", as.numeric(MS2_Spectra_Table$DPscore[g]),".png"), width = 480, height = 480)
+      png(file = paste0(MS2_Spectra_Table$ID[g],"_DP_", signif(as.numeric(MS2_Spectra_Table$DPscore[g]),2),".png"), width = 480, height = 480)
       mirrorPlot <- plot(spQ, spL, tolerance = ms2.tol, main = title)
       dev.off()
     }

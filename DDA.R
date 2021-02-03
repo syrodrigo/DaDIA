@@ -13,7 +13,7 @@ plot.DDA.mztol <- 0.1
 plot.DDA.rttol <- 30
 perform.MS2.extraction <- TRUE # whether to perform MS2 extraction and feature annotation
 ###############################################################
-DDA.directory <- "C:/Users/User/Desktop/DDA"
+DDA.directory <- "E:\\metabolomics_data\\DaDia\\DDA"
 ###############################################################
 # Database search (dot product)
 db.name <- 'MoNA-export-MassBank.msp'

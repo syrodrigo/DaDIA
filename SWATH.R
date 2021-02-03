@@ -10,7 +10,7 @@ rt.tol <- 60 #rt tolerance in seconds
 num.samples <- 3 ######IMPORTANT######## <------- enter how many DIA samples here #####
 perform.MS2.extraction <- TRUE # whether to perform MS2 extraction and feature annotation
 ###############################################################
-DIA.directory <- "C:/Users/User/Desktop/SWATH"
+DIA.directory <- "E:/metabolomics_data/DaDia/DIA"
 ###############################################################
 # Database search (dot product)
 db.name <- 'MoNA-export-MassBank.msp'
